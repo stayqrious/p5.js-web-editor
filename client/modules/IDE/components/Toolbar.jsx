@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -98,11 +99,23 @@ class Toolbar extends React.Component {
         </button>
         <button
           className={playButtonClass}
-          onClick={this.props.startSketch}
+          onClick={() => {
+            this.props
+              .saveProject(this.props.cmController.getContent())
+              .then((val) => this.props.startSketch());
+          }}
           aria-label={this.props.t('Toolbar.PlayOnlyVisualSketchARIA')}
           disabled={this.props.infiniteLoop}
         >
           <PlayIcon focusable="false" aria-hidden="true" />
+        </button>
+        <button
+          style={{ marginRight: '5px' }}
+          onClick={() =>
+            this.props.saveProject(this.props.cmController.getContent())
+          }
+        >
+          Save
         </button>
         <button
           className={stopButtonClass}
@@ -159,7 +172,8 @@ class Toolbar extends React.Component {
             onBlur={this.handleProjectNameSave}
             onKeyPress={this.handleKeyPress}
           />
-          {(() => { // eslint-disable-line
+          {(() => {
+            // eslint-disable-line
             if (this.props.owner) {
               return (
                 <p className="toolbar__project-owner">
@@ -190,6 +204,14 @@ Toolbar.propTypes = {
   stopSketch: PropTypes.func.isRequired,
   setProjectName: PropTypes.func.isRequired,
   openPreferences: PropTypes.func.isRequired,
+  cmController: PropTypes.shape({
+    tidyCode: PropTypes.func,
+    showFind: PropTypes.func,
+    findNext: PropTypes.func,
+    findPrev: PropTypes.func,
+    showReplace: PropTypes.func,
+    getContent: PropTypes.func
+  }),
   owner: PropTypes.shape({
     username: PropTypes.string
   }),
@@ -233,6 +255,10 @@ const mapDispatchToProps = {
   ...IDEActions,
   ...preferenceActions,
   ...projectActions
+};
+
+Toolbar.defaultProps = {
+  cmController: {}
 };
 
 export const ToolbarComponent = withTranslation()(Toolbar);

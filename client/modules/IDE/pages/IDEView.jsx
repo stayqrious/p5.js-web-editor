@@ -249,11 +249,12 @@ class IDEView extends React.Component {
           <title>{getTitle(this.props)}</title>
         </Helmet>
         {this.props.toast.isVisible && <Toast />}
-        <Nav
+        {/* Navigation */}
+        {/* <Nav
           warnIfUnsavedChanges={this.handleUnsavedChanges}
           cmController={this.cmController}
-        />
-        <Toolbar key={this.props.project.id} />
+        /> */}
+        <Toolbar key={this.props.project.id} cmController={this.cmController} />
         {this.props.ide.preferencesIsVisible && (
           <Overlay
             title={this.props.t('Preferences.Settings')}
