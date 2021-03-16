@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import slugify from 'slugify';
 import friendlyWords from 'friendly-words';
 import lodash from 'lodash';
@@ -7,6 +8,8 @@ import GitHubStrategy from 'passport-github';
 import LocalStrategy from 'passport-local';
 import GoogleStrategy from 'passport-google-oauth20';
 import { BasicStrategy } from 'passport-http';
+import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
+import uuid from 'node-uuid';
 
 import User from '../models/user';
 
@@ -27,6 +30,46 @@ passport.deserializeUser((id, done) => {
     done(err, user);
   });
 });
+
+// Sign in using JWT
+
+passport.use(
+  new JWTStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromUrlQueryParameter('token'),
+      algorithms: ['HS256'],
+      secretOrKey: Buffer.from(process.env.TOKEN_KEY, 'hex')
+    },
+    (payload, done) => {
+      if (!payload.identifier) {
+        return done(null, false);
+      }
+
+      User.findOne(
+        { identifier: payload.identifier },
+        { __v: 0 },
+        (findUserErr, doc) => {
+          if (findUserErr) return done(findUserErr, false);
+
+          if (doc) {
+            return done(null, doc);
+          }
+
+          const newUser = new User({
+            identifier: payload.identifier,
+            username: uuid.v4()
+          });
+
+          newUser.save((saveErr, newDoc) => {
+            if (saveErr) return done(saveErr, false);
+
+            done(null, newDoc);
+          });
+        }
+      );
+    }
+  )
+);
 
 /**
  * Sign in using Email/Username and Password.

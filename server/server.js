@@ -60,8 +60,9 @@ app.set('trust proxy', true);
 
 // Enable Cross-Origin Resource Sharing (CORS) for all origins
 const corsMiddleware = cors({
-  credentials: true,
-  origin: allowedCorsOrigins
+  credentials: true
+  // Uncomment the below line at the time of deployment
+  // origin: allowedCorsOrigins
 });
 app.use(corsMiddleware);
 // Enable pre-flight OPTIONS route for all end-points
@@ -78,8 +79,10 @@ app.use(
     proxy: true,
     name: 'sessionId',
     cookie: {
-      httpOnly: true,
-      secure: false
+      // httpOnly: true,
+      secure: false,
+      // Same site cookie set to 'None' for an explicit cross-site cookie.
+      sameSite: 'none'
     },
     store: new MongoStore({
       mongooseConnection: mongoose.connection,

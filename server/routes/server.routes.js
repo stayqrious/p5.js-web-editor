@@ -7,10 +7,14 @@ import {
   projectForUserExists
 } from '../controllers/project.controller';
 import { collectionForUserExists } from '../controllers/collection.controller';
+import { jwtVerify } from 'jose/jwt/verify';
+import passport from 'passport';
 
 const router = new Router();
 
-const fallback404 = (res) => (exists) => // eslint-disable-line
+const fallback404 = (res) => (
+  exists // eslint-disable-line
+) =>
   exists ? res.send(renderIndex()) : get404Sketch((html) => res.send(html));
 
 // this is intended to be a temporary file
@@ -69,6 +73,37 @@ router.get('/login', (req, res) => {
   }
   return res.send(renderIndex());
 });
+
+router.get(
+  '/token-login/token',
+  passport.authenticate('jwt', { session: true }),
+  (req, res) => {
+    res.redirect('/');
+
+    // Below is an alternate way of validating JWT
+    // res.json({ user: req.user });
+    // const verifyJWT = async (providedToken) => {
+    //   try {
+    //     const { payload, protectedHeader } = await jwtVerify(
+    //       req.params.token,
+    //       Buffer.from(
+    //         process.env.TOKEN_KEY,
+    //         'hex'
+    //       ),
+    //       { algorithms: ['HS256'] }
+    //     );
+
+    //     console.log(payload);
+
+    //     res.redirect('/');
+    //   } catch (e) {
+    //     console.log(e.code);
+    //   }
+    // };
+
+    // verifyJWT(req.params.token);
+  }
+);
 
 router.get('/reset-password', (req, res) => {
   res.send(renderIndex());

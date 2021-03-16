@@ -49,6 +49,7 @@ apiKeySchema.set('toJSON', {
 const userSchema = new Schema(
   {
     name: { type: String, default: '' },
+    identifier: String,
     username: { type: String, required: true, unique: true },
     password: { type: String },
     resetPasswordToken: String,
