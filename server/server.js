@@ -79,10 +79,11 @@ app.use(
     proxy: true,
     name: 'sessionId',
     cookie: {
-      // httpOnly: true,
-      secure: false,
       // Same site cookie set to 'None' for an explicit cross-site cookie.
-      sameSite: 'none'
+      // sameSite: 'none',
+      httpOnly: true,
+      // httpOnly: true,
+      secure: false
     },
     store: new MongoStore({
       mongooseConnection: mongoose.connection,

@@ -7,7 +7,7 @@ import {
   projectForUserExists
 } from '../controllers/project.controller';
 import { collectionForUserExists } from '../controllers/collection.controller';
-import { jwtVerify } from 'jose/jwt/verify';
+import { SignJWT } from 'jose/jwt/sign';
 import passport from 'passport';
 
 const router = new Router();
@@ -21,6 +21,10 @@ const fallback404 = (res) => (
 // until i figure out isomorphic rendering
 
 router.get('/', (req, res) => {
+  res.send(renderIndex());
+});
+
+router.get('/configuration', (req, res) => {
   res.send(renderIndex());
 });
 
@@ -75,11 +79,15 @@ router.get('/login', (req, res) => {
 });
 
 router.get(
-  '/token-login/token',
-  passport.authenticate('jwt', { session: true }),
+  '/token-login/config',
+  passport.authenticate('initial-jwt', { session: true }),
   (req, res) => {
-    res.redirect('/');
-
+    console.log('Server', req.query.hideHeader);
+    res.redirect(
+      `/configuration?token=${req.query.token}${
+        req.query.hideHeader === 'true' ? `&hideHeader=${true}` : ''
+      }`
+    );
     // Below is an alternate way of validating JWT
     // res.json({ user: req.user });
     // const verifyJWT = async (providedToken) => {

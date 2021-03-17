@@ -12,6 +12,13 @@ export function authError(error) {
   };
 }
 
+export function hideHeader(val) {
+  return (dispatch) => {
+    dispatch({ type: 'CONFIG_CHANGE', payload: { hideHeader: val } });
+    browserHistory.push('/');
+  };
+}
+
 export function signUpUser(formValues) {
   return apiClient.post('/signup', formValues);
 }

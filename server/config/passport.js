@@ -31,9 +31,34 @@ passport.deserializeUser((id, done) => {
   });
 });
 
+// JWT Strategy for Client Authentication
+
+passport.use(
+  'client-jwt',
+  new JWTStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      algorithms: ['HS256'],
+      secretOrKey: Buffer.from(process.env.TOKEN_KEY, 'hex')
+    },
+    (payload, done) => {
+      if (!payload.sub) return done(true, false);
+
+      User.findById(payload.sub, (userFindErr, doc) => {
+        if (userFindErr) return done(userFindErr, false);
+
+        if (doc) return done(null, doc);
+
+        done(null, false);
+      });
+    }
+  )
+);
+
 // Sign in using JWT
 
 passport.use(
+  'initial-jwt',
   new JWTStrategy(
     {
       jwtFromRequest: ExtractJwt.fromUrlQueryParameter('token'),
@@ -57,7 +82,8 @@ passport.use(
 
           const newUser = new User({
             identifier: payload.identifier,
-            username: uuid.v4()
+            username: uuid.v4(),
+            email: uuid.v4()
           });
 
           newUser.save((saveErr, newDoc) => {

@@ -1,6 +1,6 @@
 import { Route, IndexRoute } from 'react-router';
 import React from 'react';
-
+import qs from 'qs';
 import App from './modules/App/App';
 import IDEView from './modules/IDE/pages/IDEView';
 import MobileIDEView from './modules/IDE/pages/MobileIDEView';
@@ -17,7 +17,7 @@ import CollectionView from './modules/User/pages/CollectionView';
 import DashboardView from './modules/User/pages/DashboardView';
 import createRedirectWithUsername from './components/createRedirectWithUsername';
 import MobileDashboardView from './modules/Mobile/MobileDashboardView';
-import { getUser } from './modules/User/actions';
+import { getUser, hideHeader } from './modules/User/actions';
 import { stopSketch } from './modules/IDE/actions/ide';
 import {
   userIsAuthenticated,
@@ -49,6 +49,19 @@ const routes = (store) => (
     <IndexRoute
       onEnter={checkAuth(store)}
       component={mobileFirst(MobileIDEView, IDEView)}
+    />
+
+    <Route
+      path="/configuration"
+      component={(props) => {
+        // eslint-disable-next-line react/prop-types
+        const config = qs.parse(props.location.search, {
+          ignoreQueryPrefix: true
+        });
+        console.log(config);
+        store.dispatch(hideHeader(config.hideHeader === 'true'));
+        return <div>Hey</div>;
+      }}
     />
 
     <Route

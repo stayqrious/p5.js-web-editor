@@ -250,10 +250,12 @@ class IDEView extends React.Component {
         </Helmet>
         {this.props.toast.isVisible && <Toast />}
         {/* Navigation */}
-        {/* <Nav
-          warnIfUnsavedChanges={this.handleUnsavedChanges}
-          cmController={this.cmController}
-        /> */}
+        {this.props.config.hideHeader !== true && (
+          <Nav
+            warnIfUnsavedChanges={this.handleUnsavedChanges}
+            cmController={this.cmController}
+          />
+        )}
         <Toolbar key={this.props.project.id} cmController={this.cmController} />
         {this.props.ide.preferencesIsVisible && (
           <Overlay
@@ -461,6 +463,9 @@ IDEView.propTypes = {
     pathname: PropTypes.string
   }).isRequired,
   getProject: PropTypes.func.isRequired,
+  config: PropTypes.shape({
+    hideHeader: PropTypes.bool.isRequired
+  }).isRequired,
   user: PropTypes.shape({
     authenticated: PropTypes.bool.isRequired,
     id: PropTypes.string,
@@ -591,6 +596,7 @@ function mapStateToProps(state) {
     project: state.project,
     toast: state.toast,
     console: state.console,
+    config: state.config,
     isUserOwner: getIsUserOwner(state)
   };
 }
