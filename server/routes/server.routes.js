@@ -1,3 +1,4 @@
+/* eslint-disable */ 
 import { Router } from 'express';
 import { renderIndex } from '../views/index';
 import { get404Sketch } from '../views/404Page';
