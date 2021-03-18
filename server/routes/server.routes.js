@@ -7,7 +7,7 @@ import {
   projectForUserExists
 } from '../controllers/project.controller';
 import { collectionForUserExists } from '../controllers/collection.controller';
-import { SignJWT } from 'jose/jwt/sign';
+// import { SignJWT } from 'jose/jwt/sign';
 import passport from 'passport';
 
 const router = new Router();
@@ -80,9 +80,8 @@ router.get('/login', (req, res) => {
 
 router.get(
   '/token-login/config',
-  passport.authenticate('initial-jwt', { session: true }),
+  passport.authenticate('initial-jwt', { session: false }),
   (req, res) => {
-    console.log('Server', req.query.hideHeader);
     res.redirect(
       `/configuration?token=${req.query.token}${
         req.query.hideHeader === 'true' ? `&hideHeader=${true}` : ''

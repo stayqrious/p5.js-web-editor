@@ -17,7 +17,11 @@ import CollectionView from './modules/User/pages/CollectionView';
 import DashboardView from './modules/User/pages/DashboardView';
 import createRedirectWithUsername from './components/createRedirectWithUsername';
 import MobileDashboardView from './modules/Mobile/MobileDashboardView';
-import { getUser, hideHeader } from './modules/User/actions';
+import {
+  getUser,
+  hideHeader,
+  validateAndLoginUser
+} from './modules/User/actions';
 import { stopSketch } from './modules/IDE/actions/ide';
 import {
   userIsAuthenticated,
@@ -59,7 +63,9 @@ const routes = (store) => (
           ignoreQueryPrefix: true
         });
         console.log(config);
+        store.dispatch(validateAndLoginUser(config.token));
         store.dispatch(hideHeader(config.hideHeader === 'true'));
+        console.log(config.token);
         return <div>Hey</div>;
       }}
     />

@@ -1,26 +1,37 @@
-import passport from 'passport';
+// import passport from 'passport';
 
 import { userResponse } from './user.controller';
 
-export function createSession(req, res, next) {
-  passport.authenticate('local', (err, user) => {
-    if (err) {
-      next(err);
-      return;
-    }
-    if (!user) {
-      res.status(401).json({ message: 'Invalid username or password.' });
-      return;
-    }
 
-    req.logIn(user, (innerErr) => {
-      if (innerErr) {
-        next(innerErr);
-        return;
-      }
-      res.json(userResponse(req.user));
-    });
-  })(req, res, next);
+export function createSession(req, res, next) {
+
+
+  if (req.user) return res.json(userResponse(req.user));
+  else {
+    return res.status(403).json({success: false, message: "There was an error"});
+  }
+
+
+
+  // Old code
+  // passport.authenticate('local', (err, user) => {
+  //   if (err) {
+  //     next(err);
+  //     return;
+  //   }
+  //   if (!user) {
+  //     res.status(401).json({ message: 'Invalid username or password.' });
+  //     return;
+  //   }
+
+  //   req.logIn(user, (innerErr) => {
+  //     if (innerErr) {
+  //       next(innerErr);
+  //       return;
+  //     }
+  //     res.json(userResponse(req.user));
+  //   });
+  // })(req, res, next);
 }
 
 export function getSession(req, res) {

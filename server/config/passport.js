@@ -44,7 +44,7 @@ passport.use(
     (payload, done) => {
       if (!payload.sub) return done(true, false);
 
-      User.findById(payload.sub, (userFindErr, doc) => {
+      User.findOne({identifier: payload.sub}, (userFindErr, doc) => {
         if (userFindErr) return done(userFindErr, false);
 
         if (doc) return done(null, doc);
@@ -66,12 +66,12 @@ passport.use(
       secretOrKey: Buffer.from(process.env.TOKEN_KEY, 'hex')
     },
     (payload, done) => {
-      if (!payload.identifier) {
+      if (!payload.sub) {
         return done(null, false);
       }
 
       User.findOne(
-        { identifier: payload.identifier },
+        {identifier: payload.sub},
         { __v: 0 },
         (findUserErr, doc) => {
           if (findUserErr) return done(findUserErr, false);
@@ -81,7 +81,7 @@ passport.use(
           }
 
           const newUser = new User({
-            identifier: payload.identifier,
+            identifier: payload.sub,
             username: uuid.v4(),
             email: uuid.v4()
           });

@@ -23,8 +23,12 @@ export function signUpUser(formValues) {
   return apiClient.post('/signup', formValues);
 }
 
-export function loginUser(formValues) {
-  return apiClient.post('/login', formValues);
+export function loginUser(token) {
+  return apiClient.post(
+    '/login',
+    {},
+    { headers: { Authorization: `bearer ${token}` } }
+  );
 }
 
 export function loginUserSuccess(user) {
@@ -105,9 +109,12 @@ export function validateAndSignUpUser(formValues) {
 }
 
 export function getUser() {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const state = getState();
     apiClient
-      .get('/session')
+      .get('/session', {
+        headers: { Authorization: `bearer ${state.user.token}` }
+      })
       .then((response) => {
         dispatch({
           type: ActionTypes.AUTH_USER,
