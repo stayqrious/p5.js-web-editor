@@ -503,6 +503,10 @@ IDEView.propTypes = {
     }),
     updatedAt: PropTypes.string
   }).isRequired,
+  editorAccessibility: PropTypes.shape({
+    lintMessages: PropTypes.any
+    // lintMessages: PropTypes.objectOf(PropTypes.shape()).isRequired
+  }).isRequired,
   preferences: PropTypes.shape({
     autosave: PropTypes.bool.isRequired,
     fontSize: PropTypes.number.isRequired,

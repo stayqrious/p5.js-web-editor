@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { browserHistory } from 'react-router';
 import * as ActionTypes from '../../constants';
 import apiClient from '../../utils/apiClient';
@@ -59,14 +60,14 @@ export function setPreferences(preferences) {
   };
 }
 
-export function validateAndLoginUser(formProps) {
+export function validateAndLoginUser(token) {
   return (dispatch, getState) => {
     const state = getState();
     const { previousPath } = state.ide;
     return new Promise((resolve) => {
-      loginUser(formProps)
+      loginUser(token)
         .then((response) => {
-          dispatch(loginUserSuccess(response.data));
+          dispatch(loginUserSuccess({ ...response.data, token }));
           dispatch(setPreferences(response.data.preferences));
           dispatch(
             setLanguage(response.data.preferences.language, {
@@ -74,6 +75,8 @@ export function validateAndLoginUser(formProps) {
             })
           );
           dispatch(justOpenedProject());
+          localStorage.setItem('token', token);
+          apiClient.defaults.headers.common.Authorization = `bearer ${token}`;
           browserHistory.push(previousPath);
           resolve();
         })
@@ -109,16 +112,17 @@ export function validateAndSignUpUser(formValues) {
 }
 
 export function getUser() {
-  return (dispatch, getState) => {
-    const state = getState();
+  return (dispatch) => {
+    const token = localStorage.getItem('token');
+    if (!token) return dispatch(authError("Token doesn't exist"));
     apiClient
       .get('/session', {
-        headers: { Authorization: `bearer ${state.user.token}` }
+        headers: { Authorization: `bearer ${token}` }
       })
       .then((response) => {
         dispatch({
           type: ActionTypes.AUTH_USER,
-          user: response.data
+          user: { ...response.data, token }
         });
         dispatch({
           type: ActionTypes.SET_PREFERENCES,
@@ -127,6 +131,8 @@ export function getUser() {
         setLanguage(response.data.preferences.language, {
           persistPreference: false
         });
+        // Setting the default header for the API client of axios.
+        apiClient.defaults.headers.common.Authorization = `bearer ${token}`;
       })
       .catch((error) => {
         const { response } = error;
@@ -167,18 +173,18 @@ export function resetProject(dispatch) {
 
 export function logoutUser() {
   return (dispatch) => {
-    apiClient
-      .get('/logout')
-      .then(() => {
-        dispatch({
-          type: ActionTypes.UNAUTH_USER
-        });
-        resetProject(dispatch);
-      })
-      .catch((error) => {
-        const { response } = error;
-        dispatch(authError(response.data.error));
-      });
+    // Removing token from the local storage.
+    localStorage.removeItem('token');
+    delete apiClient.defaults.headers.common.Authorization;
+    dispatch({
+      type: ActionTypes.UNAUTH_USER
+    });
+    resetProject(dispatch);
+    // apiClient.get('/logout').then(() => {});
+    // .catch((error) => {
+    //   const { response } = error;
+    //   dispatch(authError(response.data.error));
+    // });
   };
 }
 

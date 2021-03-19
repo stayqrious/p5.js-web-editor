@@ -9,8 +9,8 @@ const ROOT_URL = getConfig('API_URL');
  */
 function createClientInstance() {
   return axios.create({
-    baseURL: ROOT_URL,
-    withCredentials: true
+    baseURL: ROOT_URL
+    // withCredentials: true
   });
 }
 
