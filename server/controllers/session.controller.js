@@ -2,16 +2,12 @@
 
 import { userResponse } from './user.controller';
 
-
 export function createSession(req, res, next) {
-
-
   if (req.user) return res.json(userResponse(req.user));
-  else {
-    return res.status(403).json({success: false, message: "There was an error"});
-  }
 
-
+  return res
+    .status(403)
+    .json({ success: false, message: 'There was an error' });
 
   // Old code
   // passport.authenticate('local', (err, user) => {

@@ -6,7 +6,6 @@ import {
 } from '../../domain-objects/Project';
 
 export default function createProject(req, res) {
-
   let projectValues = {
     user: req.user._id
   };

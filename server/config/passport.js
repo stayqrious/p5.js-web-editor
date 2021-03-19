@@ -44,7 +44,7 @@ passport.use(
     (payload, done) => {
       if (!payload.sub) return done(true, false);
 
-      User.findOne({identifier: payload.sub}, (userFindErr, doc) => {
+      User.findOne({ identifier: payload.sub }, (userFindErr, doc) => {
         if (userFindErr) return done(userFindErr, false);
 
         if (doc) return done(null, doc);
@@ -71,7 +71,7 @@ passport.use(
       }
 
       User.findOne(
-        {identifier: payload.sub},
+        { identifier: payload.sub },
         { __v: 0 },
         (findUserErr, doc) => {
           if (findUserErr) return done(findUserErr, false);
