@@ -51,6 +51,7 @@ export const SHOW_MODAL = 'SHOW_MODAL';
 export const HIDE_MODAL = 'HIDE_MODAL';
 export const CREATE_FILE = 'CREATE_FILE';
 export const SET_BLOB_URL = 'SET_BLOB_URL';
+export const SET_FILE_STRUCTURE = 'SET_FILE_STRUCTURE';
 
 export const EXPAND_SIDEBAR = 'EXPAND_SIDEBAR';
 export const COLLAPSE_SIDEBAR = 'COLLAPSE_SIDEBAR';

@@ -37,6 +37,28 @@ function createUniqueName(name, parentId, files) {
   return testName;
 }
 
+// Setting the file structure
+
+export function setFileStructure(id, username) {
+  return (dispatch) => {
+    apiClient
+      .get(`/${username}/projects/${id}`)
+      .then((response) => {
+        dispatch({
+          type: ActionTypes.SET_FILE_STRUCTURE,
+          files: response.data.files
+        });
+      })
+      .catch((error) => {
+        const { response } = error;
+        dispatch({
+          type: ActionTypes.ERROR,
+          error: response.data
+        });
+      });
+  };
+}
+
 export function updateFileContent(id, content) {
   return {
     type: ActionTypes.UPDATE_FILE_CONTENT,

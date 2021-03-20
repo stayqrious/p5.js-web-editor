@@ -83,9 +83,14 @@ router.get(
   '/token-login/config',
   passport.authenticate('initial-jwt', { session: false }),
   (req, res) => {
+    console.log(req.query);
     res.redirect(
       `/configuration?token=${req.query.token}${
         req.query.hideHeader === 'true' ? `&hideHeader=${true}` : ''
+      }${
+        req.query.projectID && req.query.username
+          ? `&projectID=${req.query.projectID}&username=${req.query.username}`
+          : ''
       }`
     );
     // Below is an alternate way of validating JWT

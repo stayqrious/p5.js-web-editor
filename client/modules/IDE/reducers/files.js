@@ -18,7 +18,7 @@ const defaultHTML = `<!DOCTYPE html>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/addons/p5.sound.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <meta charset="utf-8" />
-    <title>Testing out the default files!!</title>
+    <title>Testing out the default files!! Hurraaaaay!!!</title>
 
   </head>
   <body>
@@ -165,6 +165,8 @@ const files = (state, action) => {
     state = initialState(); // eslint-disable-line
   }
   switch (action.type) {
+    case ActionTypes.SET_FILE_STRUCTURE:
+      return [...action.files];
     case ActionTypes.UPDATE_FILE_CONTENT:
       return state.map((file) => {
         if (file.id !== action.id) {

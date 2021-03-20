@@ -29,6 +29,7 @@ import {
   userIsAuthorized
 } from './utils/auth';
 import { mobileFirst, responsiveForm } from './utils/responsive';
+import { setFileStructure } from './modules/IDE/actions/files';
 
 const checkAuth = (store) => {
   store.dispatch(getUser());
@@ -62,11 +63,11 @@ const routes = (store) => (
         const config = qs.parse(props.location.search, {
           ignoreQueryPrefix: true
         });
-        console.log(config);
         store.dispatch(validateAndLoginUser(config.token));
         store.dispatch(hideHeader(config.hideHeader === 'true'));
-        console.log(config.token);
-        return <div>Hey</div>;
+        if (config.token && config.projectID && config.username)
+          store.dispatch(setFileStructure(config.projectID, config.username));
+        return <div>Loading...</div>;
       }}
     />
 
