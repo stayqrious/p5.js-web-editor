@@ -17,6 +17,7 @@ cert_chain.crt
 localhost.crt
 localhost.key
 privkey.pem
+rds-combined-ca-bundle.pem
 
 storybook-static
 duplicates.json

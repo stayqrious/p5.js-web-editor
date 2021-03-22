@@ -3,11 +3,13 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import session from 'express-session';
-import connectMongo from 'connect-mongo';
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
+// import session from 'express-session';
+// import connectMongo from 'connect-mongo';
 import passport from 'passport';
 import path from 'path';
-import basicAuth from 'express-basic-auth';
+// import basicAuth from 'express-basic-auth';
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -33,7 +35,28 @@ import { renderIndex } from './views/index';
 import { get404Sketch } from './views/404Page';
 
 const app = new Express();
-const MongoStore = connectMongo(session);
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  integrations: [
+    // enable HTTP calls tracing
+    new Sentry.Integrations.Http({ tracing: true }),
+    // enable Express.js middleware tracing
+    new Tracing.Integrations.Express({ app })
+  ],
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0
+});
+
+// RequestHandler creates a separate execution context using domains, so that every
+// transaction/span/breadcrumb is attached to its own Hub instance
+app.use(Sentry.Handlers.requestHandler());
+// TracingHandler creates a trace for every incoming request
+app.use(Sentry.Handlers.tracingHandler());
+
+// const MongoStore = connectMongo(session);
 
 app.get('/health', (req, res) => res.json({ success: true }));
 
@@ -71,48 +94,48 @@ app.options('*', corsMiddleware);
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cookieParser());
-app.use(
-  session({
-    resave: true,
-    saveUninitialized: false,
-    secret: process.env.SESSION_SECRET,
-    proxy: true,
-    name: 'sessionId',
-    cookie: {
-      // Same site cookie set to 'None' for an explicit cross-site cookie.
-      // sameSite: 'none',
-      httpOnly: true,
-      // httpOnly: true,
-      secure: false
-    },
-    store: new MongoStore({
-      mongooseConnection: mongoose.connection,
-      autoReconnect: true
-    })
-  })
-);
+// app.use(
+//   session({
+//     resave: true,
+//     saveUninitialized: false,
+//     secret: process.env.SESSION_SECRET,
+//     proxy: true,
+//     name: 'sessionId',
+//     cookie: {
+//       // Same site cookie set to 'None' for an explicit cross-site cookie.
+//       // sameSite: 'none',
+//       httpOnly: true,
+//       // httpOnly: true,
+//       secure: false
+//     },
+//     store: new MongoStore({
+//       mongooseConnection: mongoose.connection,
+//       autoReconnect: true
+//     })
+//   })
+// );
 
 app.use('/api/v1', requestsOfTypeJSON(), api);
 // This is a temporary way to test access via Personal Access Tokens
 // Sending a valid username:<personal-access-token> combination will
 // return the user's information.
-app.get(
-  '/api/v1/auth/access-check',
-  passport.authenticate('basic', { session: false }),
-  (req, res) => res.json(req.user)
-);
+// app.get(
+//   '/api/v1/auth/access-check',
+//   passport.authenticate('basic', { session: false }),
+//   (req, res) => res.json(req.user)
+// );
 
 // For basic auth, but can't have double basic auth for API
-if (process.env.BASIC_USERNAME && process.env.BASIC_PASSWORD) {
-  app.use(
-    basicAuth({
-      users: {
-        [process.env.BASIC_USERNAME]: process.env.BASIC_PASSWORD
-      },
-      challenge: true
-    })
-  );
-}
+// if (process.env.BASIC_USERNAME && process.env.BASIC_PASSWORD) {
+//   app.use(
+//     basicAuth({
+//       users: {
+//         [process.env.BASIC_USERNAME]: process.env.BASIC_PASSWORD
+//       },
+//       challenge: true
+//     })
+//   );
+// }
 
 // Body parser, cookie parser, sessions, serve public assets
 app.use(

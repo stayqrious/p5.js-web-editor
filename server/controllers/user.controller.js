@@ -2,7 +2,7 @@ import crypto from 'crypto';
 import async from 'async';
 
 import User from '../models/user';
-import mail from '../utils/mail';
+// import mail from '../utils/mail';
 import { renderEmailConfirmation, renderResetPassword } from '../views/mail';
 
 export * from './user.controller/apiKey';
@@ -84,10 +84,10 @@ export function createUser(req, res, next) {
             to: req.user.email
           });
 
-          mail.send(mailOptions, (mailErr, result) => {
-            // eslint-disable-line no-unused-vars
-            res.json(userResponse(req.user));
-          });
+          // mail.send(mailOptions, (mailErr, result) => {
+          //   // eslint-disable-line no-unused-vars
+          //   res.json(userResponse(req.user));
+          // });
         });
       });
     });
@@ -175,7 +175,7 @@ export function resetPasswordInitiate(req, res) {
           to: user.email
         });
 
-        mail.send(mailOptions, done);
+        // mail.send(mailOptions, done);
       }
     ],
     (err) => {
@@ -241,20 +241,20 @@ export function emailVerificationInitiate(req, res) {
           to: user.email
         });
 
-        mail.send(mailOptions, (mailErr, result) => {
-          // eslint-disable-line no-unused-vars
-          if (mailErr != null) {
-            res.status(500).send({ error: 'Error sending mail' });
-          } else {
-            const EMAIL_VERIFY_TOKEN_EXPIRY_TIME = Date.now() + 3600000 * 24; // 24 hours
-            user.verified = User.EmailConfirmation.Resent;
-            user.verifiedToken = token;
-            user.verifiedTokenExpires = EMAIL_VERIFY_TOKEN_EXPIRY_TIME; // 24 hours
-            user.save();
+        // mail.send(mailOptions, (mailErr, result) => {
+        //   // eslint-disable-line no-unused-vars
+        //   if (mailErr != null) {
+        //     res.status(500).send({ error: 'Error sending mail' });
+        //   } else {
+        //     const EMAIL_VERIFY_TOKEN_EXPIRY_TIME = Date.now() + 3600000 * 24; // 24 hours
+        //     user.verified = User.EmailConfirmation.Resent;
+        //     user.verifiedToken = token;
+        //     user.verifiedTokenExpires = EMAIL_VERIFY_TOKEN_EXPIRY_TIME; // 24 hours
+        //     user.save();
 
-            res.json(userResponse(req.user));
-          }
-        });
+        //     res.json(userResponse(req.user));
+        //   }
+        // });
       });
     }
   ]);
@@ -375,7 +375,7 @@ export function updateSettings(req, res) {
           to: user.email
         });
 
-        mail.send(mailOptions);
+        // mail.send(mailOptions);
       });
     } else {
       saveUser(res, user);

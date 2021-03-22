@@ -1,4 +1,4 @@
-FROM node:12.16.1 as base
+FROM node:14.16.0 as base
 ENV APP_HOME=/usr/src/app \
   TERM=xterm
 RUN mkdir -p $APP_HOME
@@ -8,6 +8,7 @@ EXPOSE 8000
 FROM base as development
 ENV NODE_ENV development
 COPY package.json package-lock.json ./
+RUN npm install npm@7.6.3
 RUN npm install
 RUN npm rebuild node-sass
 COPY .babelrc index.js nodemon.json ./

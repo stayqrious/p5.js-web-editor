@@ -83,7 +83,6 @@ router.get(
   '/token-login/config',
   passport.authenticate('initial-jwt', { session: false }),
   (req, res) => {
-    console.log(req.query);
     res.redirect(
       `/configuration?token=${req.query.token}${
         req.query.hideHeader === 'true' ? `&hideHeader=${true}` : ''

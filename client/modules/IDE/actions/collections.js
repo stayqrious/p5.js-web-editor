@@ -16,7 +16,6 @@ export function getCollections(username) {
     } else {
       url = '/collections';
     }
-    console.log(url);
     apiClient
       .get(url)
       .then((response) => {
