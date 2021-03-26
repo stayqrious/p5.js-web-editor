@@ -380,7 +380,7 @@ class Nav extends React.PureComponent {
             {getConfig('EXAMPLES_ENABLED') && (
               <li className="nav__dropdown-item">
                 <Link
-                  to="/p5/sketches"
+                  to="/stayqrious/sketches"
                   onFocus={this.handleFocusForFile}
                   onBlur={this.handleBlur}
                   onClick={this.setDropdownForNone}
