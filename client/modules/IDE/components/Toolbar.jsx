@@ -8,8 +8,9 @@ import { withTranslation } from 'react-i18next';
 import * as IDEActions from '../actions/ide';
 import * as preferenceActions from '../actions/preferences';
 import * as projectActions from '../actions/project';
-
+import { getIsUserOwner } from '../selectors/users';
 import PlayIcon from '../../../images/play.svg';
+import SaveIcon from '../../../images/save.svg';
 import StopIcon from '../../../images/stop.svg';
 import PreferencesIcon from '../../../images/preferences.svg';
 import EditProjectNameIcon from '../../../images/pencil.svg';
@@ -98,6 +99,7 @@ class Toolbar extends React.Component {
           <PlayIcon focusable="false" aria-hidden="true" />
         </button>
         <button
+          title="Play"
           className={playButtonClass}
           onClick={() => {
             this.props
@@ -110,14 +112,24 @@ class Toolbar extends React.Component {
           <PlayIcon focusable="false" aria-hidden="true" />
         </button>
         <button
-          style={{ marginRight: '5px' }}
-          onClick={() =>
-            this.props.saveProject(this.props.cmController.getContent())
-          }
+          title="Save"
+          style={{ marginRight: '1.25rem', padding: 0 }}
+          className={playButtonClass}
+          onClick={() => {
+            if (
+              this.props.isUserOwner ||
+              (this.props.user.authenticated && !this.props.project.owner)
+            ) {
+              this.props.saveProject(this.cmController.getContent());
+            } else if (this.props.user.authenticated) {
+              this.props.cloneProject();
+            }
+          }}
         >
-          Save
+          <SaveIcon focusable="false" aria-hidden="true" />
         </button>
         <button
+          title="Stop"
           className={stopButtonClass}
           onClick={this.props.stopSketch}
           aria-label={this.props.t('Toolbar.StopSketchARIA')}
@@ -218,7 +230,10 @@ Toolbar.propTypes = {
   project: PropTypes.shape({
     name: PropTypes.string.isRequired,
     isEditingName: PropTypes.bool,
-    id: PropTypes.string
+    id: PropTypes.string,
+    owner: PropTypes.shape({
+      id: PropTypes.string
+    })
   }).isRequired,
   showEditProjectName: PropTypes.func.isRequired,
   hideEditProjectName: PropTypes.func.isRequired,
@@ -231,7 +246,14 @@ Toolbar.propTypes = {
   startAccessibleSketch: PropTypes.func.isRequired,
   saveProject: PropTypes.func.isRequired,
   currentUser: PropTypes.string,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  isUserOwner: PropTypes.bool.isRequired,
+  user: PropTypes.shape({
+    authenticated: PropTypes.bool.isRequired,
+    username: PropTypes.string,
+    id: PropTypes.string
+  }).isRequired,
+  cloneProject: PropTypes.func.isRequired
 };
 
 Toolbar.defaultProps = {
@@ -247,7 +269,9 @@ function mapStateToProps(state) {
     isPlaying: state.ide.isPlaying,
     owner: state.project.owner,
     preferencesIsVisible: state.ide.preferencesIsVisible,
-    project: state.project
+    project: state.project,
+    user: state.user,
+    isUserOwner: getIsUserOwner(state)
   };
 }
 
