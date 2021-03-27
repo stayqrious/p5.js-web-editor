@@ -173,6 +173,10 @@ export function saveProject(
           }
           dispatch(setProject(synchedProject));
           dispatch(projectSaveSuccess());
+          window.parent.postMessage(
+            { type: 'save', project: synchedProject },
+            '*'
+          );
           if (!autosave) {
             if (state.ide.justOpenedProject && state.preferences.autosave) {
               dispatch(showToast(5500));
@@ -223,6 +227,10 @@ export function saveProject(
         }
 
         dispatch(projectSaveSuccess());
+        window.parent.postMessage(
+          { type: 'save', project: synchedProject },
+          '*'
+        );
         if (!autosave) {
           if (state.preferences.autosave) {
             dispatch(showToast(5500));

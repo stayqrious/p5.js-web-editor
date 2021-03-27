@@ -87,6 +87,25 @@ class Toolbar extends React.Component {
     return (
       <div className="toolbar">
         <button
+          title="Save"
+          style={{ marginRight: '1.25rem', padding: 0 }}
+          className={playButtonClass}
+          onClick={() => {
+            if (
+              this.props.isUserOwner ||
+              (this.props.user.authenticated && !this.props.project.owner)
+            ) {
+              this.props.saveProject(this.props.cmController.getContent());
+            } else if (this.props.user.authenticated) {
+              this.props.cloneProject();
+            } else {
+              this.props.showErrorModal('forceAuthentication');
+            }
+          }}
+        >
+          <SaveIcon focusable="false" aria-hidden="true" />
+        </button>
+        <button
           className="toolbar__play-sketch-button"
           onClick={() => {
             this.props.startAccessibleSketch();
@@ -110,23 +129,6 @@ class Toolbar extends React.Component {
           disabled={this.props.infiniteLoop}
         >
           <PlayIcon focusable="false" aria-hidden="true" />
-        </button>
-        <button
-          title="Save"
-          style={{ marginRight: '1.25rem', padding: 0 }}
-          className={playButtonClass}
-          onClick={() => {
-            if (
-              this.props.isUserOwner ||
-              (this.props.user.authenticated && !this.props.project.owner)
-            ) {
-              this.props.saveProject(this.cmController.getContent());
-            } else if (this.props.user.authenticated) {
-              this.props.cloneProject();
-            }
-          }}
-        >
-          <SaveIcon focusable="false" aria-hidden="true" />
         </button>
         <button
           title="Stop"
@@ -253,7 +255,8 @@ Toolbar.propTypes = {
     username: PropTypes.string,
     id: PropTypes.string
   }).isRequired,
-  cloneProject: PropTypes.func.isRequired
+  cloneProject: PropTypes.func.isRequired,
+  showErrorModal: PropTypes.func.isRequired
 };
 
 Toolbar.defaultProps = {

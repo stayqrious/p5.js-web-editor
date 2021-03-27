@@ -2,10 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import orderBy from 'lodash/orderBy';
 
-import { APIKeyPropType } from './APIKeyForm';
-
 import dates from '../../../utils/formatDate';
 import TrashCanIcon from '../../../images/trash-can.svg';
+
+const APIKeyPropType = PropTypes.shape({
+  id: PropTypes.objectOf(PropTypes.shape()).isRequired,
+  token: PropTypes.objectOf(PropTypes.shape()),
+  label: PropTypes.string.isRequired,
+  createdAt: PropTypes.string.isRequired,
+  lastUsedAt: PropTypes.string
+});
 
 function APIKeyList({ apiKeys, onRemove, t }) {
   return (

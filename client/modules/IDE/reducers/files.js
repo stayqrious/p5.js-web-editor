@@ -8,7 +8,6 @@ const defaultSketch = `function setup() {
 function draw() {
   background(220);
 }
-console.log('Hey! This is the default console log in the sketch.js file!')
 `;
 
 const defaultHTML = `<!DOCTYPE html>
@@ -39,22 +38,17 @@ Editing the default style.css file! Hurray! This is a comment though.
 */
 `;
 
-const defaultNewFile = `console.log('This is a new default file!');
-// Does seem to work, right?
-`;
-
 const initialState = () => {
   const a = objectID().toHexString();
   const b = objectID().toHexString();
   const c = objectID().toHexString();
-  const d = objectID().toHexString();
   const r = objectID().toHexString();
   return [
     {
       name: 'root',
       id: r,
       _id: r,
-      children: [b, a, c, d],
+      children: [b, a, c],
       fileType: 'folder',
       content: ''
     },
@@ -80,14 +74,6 @@ const initialState = () => {
       content: defaultCSS,
       id: c,
       _id: c,
-      fileType: 'file',
-      children: []
-    },
-    {
-      name: 'newDefault.js',
-      content: defaultNewFile,
-      id: d,
-      _id: d,
       fileType: 'file',
       children: []
     }

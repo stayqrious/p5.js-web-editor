@@ -5,7 +5,6 @@ const defaultSketch = `function setup() {
 function draw() {
   background(220);
 }
-console.log('Hey! This is the default console log in the sketch.js file!')
 `;
 
 const defaultHTML = `<!DOCTYPE html>
@@ -36,10 +35,6 @@ Editing the default style.css file! Hurray! This is a comment though.
 */
 `;
 
-const defaultNewFile = `console.log('This is a new default file!');
-// Does seem to work, right?
-`;
-
 export default function createDefaultFiles() {
   return {
     'index.html': {
@@ -50,9 +45,6 @@ export default function createDefaultFiles() {
     },
     'sketch.js': {
       content: defaultSketch
-    },
-    'newDefault.js': {
-      content: defaultNewFile
     }
   };
 }

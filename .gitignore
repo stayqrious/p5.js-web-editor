@@ -21,3 +21,4 @@ rds-combined-ca-bundle.pem
 
 storybook-static
 duplicates.json
+.envrc

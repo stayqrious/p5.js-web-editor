@@ -60,7 +60,7 @@ app.use(Sentry.Handlers.tracingHandler());
 
 app.get('/health', (req, res) => res.json({ success: true }));
 
-const allowedCorsOrigins = [/p5js\.org$/];
+const allowedCorsOrigins = [/stayqrious\.(com|net)$/];
 
 // to allow client-only development
 if (process.env.CORS_ALLOW_LOCALHOST === 'true') {
@@ -176,11 +176,19 @@ app.use('/', passportRoutes);
 // configure passport
 require('./config/passport');
 
+// fs
+const fs = require('fs');
+
 // Connect to MongoDB
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoConnectionString, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  ssl: process.env.MONGO_SSL === 'true',
+  sslCA:
+    process.env.MONGO_SSL === 'true'
+      ? fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem.pem`)
+      : undefined
 });
 mongoose.set('useCreateIndex', true);
 mongoose.connection.on('error', () => {

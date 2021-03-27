@@ -1,6 +1,5 @@
 import { Route, IndexRoute } from 'react-router';
 import React from 'react';
-import qs from 'qs';
 import App from './modules/App/App';
 import IDEView from './modules/IDE/pages/IDEView';
 import MobileIDEView from './modules/IDE/pages/MobileIDEView';
@@ -17,11 +16,7 @@ import CollectionView from './modules/User/pages/CollectionView';
 import DashboardView from './modules/User/pages/DashboardView';
 import createRedirectWithUsername from './components/createRedirectWithUsername';
 import MobileDashboardView from './modules/Mobile/MobileDashboardView';
-import {
-  getUser,
-  hideHeader,
-  validateAndLoginUser
-} from './modules/User/actions';
+import { getUser } from './modules/User/actions';
 import { stopSketch } from './modules/IDE/actions/ide';
 import {
   userIsAuthenticated,
@@ -29,7 +24,6 @@ import {
   userIsAuthorized
 } from './utils/auth';
 import { mobileFirst, responsiveForm } from './utils/responsive';
-import { setFileStructure } from './modules/IDE/actions/files';
 
 const checkAuth = (store) => {
   store.dispatch(getUser());
@@ -54,21 +48,6 @@ const routes = (store) => (
     <IndexRoute
       onEnter={checkAuth(store)}
       component={mobileFirst(MobileIDEView, IDEView)}
-    />
-
-    <Route
-      path="/configuration"
-      component={(props) => {
-        // eslint-disable-next-line react/prop-types
-        const config = qs.parse(props.location.search, {
-          ignoreQueryPrefix: true
-        });
-        store.dispatch(validateAndLoginUser(config.token));
-        store.dispatch(hideHeader(config.hideHeader === 'true'));
-        if (config.token && config.projectID && config.username)
-          store.dispatch(setFileStructure(config.projectID, config.username));
-        return <div>Loading...</div>;
-      }}
     />
 
     <Route

@@ -25,10 +25,6 @@ router.get('/', (req, res) => {
   res.send(renderIndex());
 });
 
-router.get('/configuration', (req, res) => {
-  res.send(renderIndex());
-});
-
 router.get('/signup', (req, res) => {
   if (req.user) {
     return res.redirect('/');
@@ -78,44 +74,6 @@ router.get('/login', (req, res) => {
   }
   return res.send(renderIndex());
 });
-
-router.get(
-  '/token-login/config',
-  passport.authenticate('initial-jwt', { session: false }),
-  (req, res) => {
-    res.redirect(
-      `/configuration?token=${req.query.token}${
-        req.query.hideHeader === 'true' ? `&hideHeader=${true}` : ''
-      }${
-        req.query.projectID && req.query.username
-          ? `&projectID=${req.query.projectID}&username=${req.query.username}`
-          : ''
-      }`
-    );
-    // Below is an alternate way of validating JWT
-    // res.json({ user: req.user });
-    // const verifyJWT = async (providedToken) => {
-    //   try {
-    //     const { payload, protectedHeader } = await jwtVerify(
-    //       req.params.token,
-    //       Buffer.from(
-    //         process.env.TOKEN_KEY,
-    //         'hex'
-    //       ),
-    //       { algorithms: ['HS256'] }
-    //     );
-
-    //     console.log(payload);
-
-    //     res.redirect('/');
-    //   } catch (e) {
-    //     console.log(e.code);
-    //   }
-    // };
-
-    // verifyJWT(req.params.token);
-  }
-);
 
 router.get('/reset-password', (req, res) => {
   res.send(renderIndex());

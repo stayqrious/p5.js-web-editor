@@ -1,25 +1,22 @@
 /* eslint-disable consistent-return */
-import slugify from 'slugify';
-import friendlyWords from 'friendly-words';
-import lodash from 'lodash';
+// import slugify from 'slugify';
+// import friendlyWords from 'friendly-words';
 
 import passport from 'passport';
-import GitHubStrategy from 'passport-github';
 import LocalStrategy from 'passport-local';
-import GoogleStrategy from 'passport-google-oauth20';
 import { BasicStrategy } from 'passport-http';
 import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
-import uuid from 'node-uuid';
+import slugid from 'slugid';
 
 import User from '../models/user';
 
-function generateUniqueUsername(username) {
-  const adj =
-    friendlyWords.predicates[
-      Math.floor(Math.random() * friendlyWords.predicates.length)
-    ];
-  return slugify(`${username} ${adj}`);
-}
+// function generateUniqueUsername(username) {
+//   const adj =
+//     friendlyWords.predicates[
+//       Math.floor(Math.random() * friendlyWords.predicates.length)
+//     ];
+//   return slugify(`${username} ${adj}`);
+// }
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -42,57 +39,25 @@ passport.use(
       secretOrKey: Buffer.from(process.env.TOKEN_KEY, 'hex')
     },
     (payload, done) => {
-      if (!payload.sub) return done(true, false);
+      if (!payload.uid) return done(true, false);
 
-      User.findOne({ identifier: payload.sub }, (userFindErr, doc) => {
+      User.findOne({ identifier: payload.uid }, (userFindErr, doc) => {
         if (userFindErr) return done(userFindErr, false);
 
         if (doc) return done(null, doc);
 
-        done(null, false);
+        const newUser = new User({
+          identifier: payload.uid,
+          username: payload.sub || slugid.nice(),
+          email: slugid.nice()
+        });
+
+        newUser.save((saveErr, newDoc) => {
+          if (saveErr) return done(saveErr, false);
+
+          done(null, newDoc);
+        });
       });
-    }
-  )
-);
-
-// Sign in using JWT
-
-passport.use(
-  'initial-jwt',
-  new JWTStrategy(
-    {
-      jwtFromRequest: ExtractJwt.fromUrlQueryParameter('token'),
-      algorithms: ['HS256'],
-      secretOrKey: Buffer.from(process.env.TOKEN_KEY, 'hex')
-    },
-    (payload, done) => {
-      if (!payload.sub) {
-        return done(null, false);
-      }
-
-      User.findOne(
-        { identifier: payload.sub },
-        { __v: 0 },
-        (findUserErr, doc) => {
-          if (findUserErr) return done(findUserErr, false);
-
-          if (doc) {
-            return done(null, doc);
-          }
-
-          const newUser = new User({
-            identifier: payload.sub,
-            username: uuid.v4(),
-            email: uuid.v4()
-          });
-
-          newUser.save((saveErr, newDoc) => {
-            if (saveErr) return done(saveErr, false);
-
-            done(null, newDoc);
-          });
-        }
-      );
     }
   )
 );

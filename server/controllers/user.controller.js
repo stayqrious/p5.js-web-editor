@@ -3,7 +3,7 @@ import async from 'async';
 
 import User from '../models/user';
 // import mail from '../utils/mail';
-import { renderEmailConfirmation, renderResetPassword } from '../views/mail';
+// import { renderEmailConfirmation } from '../views/mail';
 
 export * from './user.controller/apiKey';
 
@@ -71,18 +71,17 @@ export function createUser(req, res, next) {
         req.logIn(user, (loginErr) => {
           if (loginErr) {
             next(loginErr);
-            return;
           }
 
-          const protocol =
-            process.env.NODE_ENV === 'production' ? 'https' : 'http';
-          const mailOptions = renderEmailConfirmation({
-            body: {
-              domain: `${protocol}://${req.headers.host}`,
-              link: `${protocol}://${req.headers.host}/verify?t=${token}`
-            },
-            to: req.user.email
-          });
+          // const protocol =
+          //  process.env.NODE_ENV === 'production' ? 'https' : 'http';
+          // const mailOptions = renderEmailConfirmation({
+          //   body: {
+          //     domain: `${protocol}://${req.headers.host}`,
+          //     link: `${protocol}://${req.headers.host}/verify?t=${token}`
+          //   },
+          //   to: req.user.email
+          // });
 
           // mail.send(mailOptions, (mailErr, result) => {
           //   // eslint-disable-line no-unused-vars
@@ -165,16 +164,15 @@ export function resetPasswordInitiate(req, res) {
         });
       },
       (token, user, done) => {
-        const protocol =
-          process.env.NODE_ENV === 'production' ? 'https' : 'http';
-        const mailOptions = renderResetPassword({
-          body: {
-            domain: `${protocol}://${req.headers.host}`,
-            link: `${protocol}://${req.headers.host}/reset-password/${token}`
-          },
-          to: user.email
-        });
-
+        // const protocol =
+        //  process.env.NODE_ENV === 'production' ? 'https' : 'http';
+        // const mailOptions = renderResetPassword({
+        //   body: {
+        //     domain: `${protocol}://${req.headers.host}`,
+        //     link: `${protocol}://${req.headers.host}/reset-password/${token}`
+        //   },
+        //   to: user.email
+        // });
         // mail.send(mailOptions, done);
       }
     ],
@@ -228,18 +226,17 @@ export function emailVerificationInitiate(req, res) {
 
         if (user.verified === User.EmailConfirmation.Verified) {
           res.status(409).json({ error: 'Email already verified' });
-          return;
         }
 
-        const protocol =
-          process.env.NODE_ENV === 'production' ? 'https' : 'http';
-        const mailOptions = renderEmailConfirmation({
-          body: {
-            domain: `${protocol}://${req.headers.host}`,
-            link: `${protocol}://${req.headers.host}/verify?t=${token}`
-          },
-          to: user.email
-        });
+        // const protocol =
+        //   process.env.NODE_ENV === 'production' ? 'https' : 'http';
+        // const mailOptions = renderEmailConfirmation({
+        //   body: {
+        //     domain: `${protocol}://${req.headers.host}`,
+        //     link: `${protocol}://${req.headers.host}/verify?t=${token}`
+        //   },
+        //   to: user.email
+        // });
 
         // mail.send(mailOptions, (mailErr, result) => {
         //   // eslint-disable-line no-unused-vars
@@ -365,15 +362,15 @@ export function updateSettings(req, res) {
 
         saveUser(res, user);
 
-        const protocol =
-          process.env.NODE_ENV === 'production' ? 'https' : 'http';
-        const mailOptions = renderEmailConfirmation({
-          body: {
-            domain: `${protocol}://${req.headers.host}`,
-            link: `${protocol}://${req.headers.host}/verify?t=${token}`
-          },
-          to: user.email
-        });
+        // const protocol =
+        //   process.env.NODE_ENV === 'production' ? 'https' : 'http';
+        // const mailOptions = renderEmailConfirmation({
+        //   body: {
+        //     domain: `${protocol}://${req.headers.host}`,
+        //     link: `${protocol}://${req.headers.host}/verify?t=${token}`
+        //   },
+        //   to: user.email
+        // });
 
         // mail.send(mailOptions);
       });
