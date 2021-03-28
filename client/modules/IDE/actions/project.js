@@ -1,19 +1,19 @@
-import { browserHistory } from 'react-router';
-import objectID from 'bson-objectid';
 import each from 'async/each';
+import objectID from 'bson-objectid';
 import isEqual from 'lodash/isEqual';
+import * as ActionTypes from '../../../constants';
+import browserHistory from '../../../history';
+import { clearState, saveState } from '../../../persistState';
 import apiClient from '../../../utils/apiClient';
 import getConfig from '../../../utils/getConfig';
-import * as ActionTypes from '../../../constants';
-import { showToast, setToastText } from './toast';
 import {
-  setUnsavedChanges,
   justOpenedProject,
   resetJustOpenedProject,
-  showErrorModal,
-  setPreviousPath
+  setPreviousPath,
+  setUnsavedChanges,
+  showErrorModal
 } from './ide';
-import { clearState, saveState } from '../../../persistState';
+import { setToastText, showToast } from './toast';
 
 const ROOT_URL = getConfig('API_URL');
 const S3_BUCKET_URL_BASE = getConfig('S3_BUCKET_URL_BASE');

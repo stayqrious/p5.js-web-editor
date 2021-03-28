@@ -4,19 +4,22 @@ services:
     image: mongo:3.6
     volumes:
       - dbdata:/data/db
-  app:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-      target: development
-    environment:
-      - MONGO_URL=mongodb://mongo:27017/p5js-web-editor
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
     ports:
-      - '8000:8000'
-    depends_on:
-      - mongo
+      - '27017:27017'
+  # app:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #     target: development
+  #   environment:
+  #     - MONGO_URL=mongodb://mongo:27017/p5js-web-editor
+  #     - TOKEN_KEY=81a660da7cd989f971ff810ef98a8813f7873f17bd9647bbe0d152590cc06734
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - '8001:8000'
+  #   depends_on:
+  #     - mongo
 volumes:
   dbdata:

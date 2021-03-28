@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
 import { withTranslation } from 'react-i18next';
-
+import { connect } from 'react-redux';
 import Button from '../../../common/Button';
 import Nav from '../../../components/Nav';
+import browserHistory from '../../../history';
 import Overlay from '../../App/components/Overlay';
 import AssetList from '../../IDE/components/AssetList';
 import AssetSize from '../../IDE/components/AssetSize';
@@ -16,7 +15,6 @@ import {
   CollectionSearchbar,
   SketchSearchbar
 } from '../../IDE/components/Searchbar';
-
 import CollectionCreate from '../components/CollectionCreate';
 import DashboardTabSwitcherPublic, {
   TabKey

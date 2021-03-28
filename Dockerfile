@@ -28,4 +28,5 @@ COPY package.json package-lock.json index.js ./
 RUN npm install --production
 RUN npm rebuild node-sass
 COPY --from=build $APP_HOME/dist ./dist
+COPY --from=build $APP_HOME/server/rds-combined-ca-bundle.pem ./rds-combined-ca-bundle.pem
 CMD ["npm", "run", "start:prod"]

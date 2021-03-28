@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-import { browserHistory } from 'react-router';
+import browserHistory from '../../history';
 import * as ActionTypes from '../../constants';
 import apiClient from '../../utils/apiClient';
 import { showErrorModal, justOpenedProject } from '../IDE/actions/ide';
@@ -16,7 +16,6 @@ export function authError(error) {
 export function hideHeader(val) {
   return (dispatch) => {
     dispatch({ type: 'CONFIG_CHANGE', payload: { hideHeader: val } });
-    browserHistory.push('/');
   };
 }
 

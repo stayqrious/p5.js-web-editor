@@ -187,7 +187,7 @@ mongoose.connect(mongoConnectionString, {
   ssl: process.env.MONGO_SSL === 'true',
   sslCA:
     process.env.MONGO_SSL === 'true'
-      ? fs.readFileSync(`${__dirname}/rds-combined-ca-bundle.pem.pem`)
+      ? fs.readFileSync(`./rds-combined-ca-bundle.pem`)
       : undefined
 });
 mongoose.set('useCreateIndex', true);

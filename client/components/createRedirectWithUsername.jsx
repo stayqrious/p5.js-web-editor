@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
+import browserHistory from '../history';
 
 const RedirectToUser = ({ username, url = '/:username/sketches' }) => {
   React.useEffect(() => {

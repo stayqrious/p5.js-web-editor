@@ -1,13 +1,13 @@
+import get from 'lodash/get';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Helmet } from 'react-helmet';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { browserHistory } from 'react-router';
-import { withTranslation } from 'react-i18next';
-import get from 'lodash/get';
-import { Helmet } from 'react-helmet';
-import { verifyEmailConfirmation } from '../actions';
 import Nav from '../../../components/Nav';
+import browserHistory from '../../../history';
+import { verifyEmailConfirmation } from '../actions';
 
 class EmailVerificationView extends React.Component {
   static defaultProps = {
