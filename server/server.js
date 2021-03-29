@@ -83,9 +83,9 @@ app.set('trust proxy', true);
 
 // Enable Cross-Origin Resource Sharing (CORS) for all origins
 const corsMiddleware = cors({
-  credentials: true
+  credentials: true,
   // Uncomment the below line at the time of deployment
-  // origin: allowedCorsOrigins
+  origin: allowedCorsOrigins
 });
 app.use(corsMiddleware);
 // Enable pre-flight OPTIONS route for all end-points

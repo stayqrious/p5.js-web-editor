@@ -38,7 +38,7 @@ const options = {
   loadPath: '/locales/{{lng}}/translations.json',
   requestOptions: {
     // used for fetch, can also be a function (payload) => ({ method: 'GET' })
-    mode: 'no-cors'
+    mode: 'cors'
   },
   allowMultiLoading: false // set loadPath: '/locales/resources.json?lng={{lng}}&ns={{ns}}' to adapt to multiLoading
 };
