@@ -226,6 +226,9 @@ app.get('*', (req, res) => {
   res.type('txt').send('Not found.');
 });
 
+// sentry
+app.use(Sentry.Handlers.errorHandler());
+
 // start app
 app.listen(process.env.PORT, (error) => {
   if (!error) {
