@@ -60,7 +60,7 @@ app.use(Sentry.Handlers.tracingHandler());
 
 app.get('/health', (req, res) => res.json({ success: true }));
 
-const allowedCorsOrigins = [/stayqrious\.(com|net)$/];
+const allowedCorsOrigins = [/stayqrious\.(com|net)(:\d+)?$/];
 
 // to allow client-only development
 if (process.env.CORS_ALLOW_LOCALHOST === 'true') {
