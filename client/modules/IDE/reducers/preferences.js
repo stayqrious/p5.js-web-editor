@@ -9,7 +9,7 @@ const initialState = {
   textOutput: false,
   gridOutput: false,
   soundOutput: false,
-  theme: 'light',
+  theme: 'dark',
   autorefresh: false,
   language: 'en-US',
   autocloseBracketsQuotes: true

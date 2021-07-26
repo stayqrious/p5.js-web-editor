@@ -84,6 +84,22 @@ class Toolbar extends React.Component {
 
     const canEditProjectName = this.canEditProjectName();
 
+    const saveOrCloneProject = () => {
+      if (
+        this.props.isUserOwner ||
+        (this.props.user.authenticated && !this.props.project.owner)
+      ) {
+        return this.props.saveProject(this.props.cmController.getContent());
+      }
+
+      if (this.props.user.authenticated) {
+        return this.props.cloneProject();
+      }
+
+      this.props.showErrorModal('forceAuthentication');
+      return Promise.reject();
+    };
+
     return (
       <div className="toolbar">
         <button
@@ -91,16 +107,7 @@ class Toolbar extends React.Component {
           style={{ marginRight: '1.25rem', padding: 0 }}
           className={playButtonClass}
           onClick={() => {
-            if (
-              this.props.isUserOwner ||
-              (this.props.user.authenticated && !this.props.project.owner)
-            ) {
-              this.props.saveProject(this.props.cmController.getContent());
-            } else if (this.props.user.authenticated) {
-              this.props.cloneProject();
-            } else {
-              this.props.showErrorModal('forceAuthentication');
-            }
+            saveOrCloneProject();
           }}
         >
           <SaveIcon focusable="false" aria-hidden="true" />
@@ -121,9 +128,7 @@ class Toolbar extends React.Component {
           title="Play"
           className={playButtonClass}
           onClick={() => {
-            this.props
-              .saveProject(this.props.cmController.getContent())
-              .then((val) => this.props.startSketch());
+            saveOrCloneProject().then((val) => this.props.startSketch());
           }}
           aria-label={this.props.t('Toolbar.PlayOnlyVisualSketchARIA')}
           disabled={this.props.infiniteLoop}
