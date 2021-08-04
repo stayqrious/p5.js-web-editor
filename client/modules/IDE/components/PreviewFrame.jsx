@@ -128,7 +128,11 @@ class PreviewFrame extends React.Component {
     const sketchDoc = parser.parseFromString(htmlFile, 'text/html');
 
     const base = sketchDoc.createElement('base');
-    base.href = `${window.location.href}/`;
+    const baseHref =
+      (document.getElementsByTagName('base')[0] || {}).href ||
+      `${window.location.href}/`;
+
+    base.href = baseHref;
     sketchDoc.head.appendChild(base);
 
     this.resolvePathsForElementsWithAttribute('src', sketchDoc, resolvedFiles);
